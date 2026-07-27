@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Internal Marks Display | Student Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #3b82f6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --radius: 12px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ========== HEADER - Flexbox ========== */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 1rem 1.5rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      animation: slideDown 0.6s ease-out;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: background var(--transition), transform var(--transition);
+    }
+
+    nav a:hover,
+    nav a.active {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+
+    /* ========== MAIN LAYOUT ========== */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Student Info Card - Flexbox */
+    .student-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: center;
+      animation: fadeInUp 0.6s ease-out 0.2s both;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .student-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .student-info {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .student-info h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .student-info p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .stats {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg);
+      border-radius: 10px;
+      min-width: 100px;
+      transition: background var(--transition), transform var(--transition);
+    }
+
+    .stat-item:hover {
+      background: #e0e7ff;
+      transform: scale(1.05);
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Section Title */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+      animation: fadeInUp 0.6s ease-out 0.3s both;
+    }
+
+    .section-header h2 {
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+      color: var(--text-muted);
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* ========== MARKS GRID - CSS Grid ========== */
+    .marks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .subject-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: transform var(--transition), box-shadow var(--transition);
+      animation: fadeInUp 0.5s ease-out both;
+      border: 1px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .subject-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--primary);
+      transition: width var(--transition);
+    }
+
+    .subject-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--border);
+    }
+
+    .subject-card:hover::before {
+      width: 6px;
+    }
+
+    /* Staggered animation delays */
+    .subject-card:nth-child(1) { animation-delay: 0.4s; }
+    .subject-card:nth-child(2) { animation-delay: 0.5s; }
+    .subject-card:nth-child(3) { animation-delay: 0.6s; }
+    .subject-card:nth-child(4) { animation-delay: 0.7s; }
+    .subject-card:nth-child(5) { animation-delay: 0.8s; }
+    .subject-card:nth-child(6) { animation-delay: 0.9s; }
+
+    .subject-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .subject-name {
+      font-weight: 600;
+      font-size: 1.05rem;
+      line-height: 1.3;
+    }
+
+    .subject-code {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: var(--bg);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .marks-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .mark-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .mark-value {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    /* Progress Bar with Animation */
+    .progress-container {
+      margin-top: 0.25rem;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--bg);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .progress-fill.excellent { background: linear-gradient(90deg, #10b981, #34d399); }
+    .progress-fill.good { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .progress-fill.average { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .progress-fill.poor { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.3),
+        transparent
+      );
+      animation: shimmer 2s infinite;
+    }
+
+    .total-marks {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .total-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .total-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .badge.excellent { background: #d1fae5; color: #065f46; }
+    .badge.good { background: #dbeafe; color: #1e40af; }
+    .badge.average { background: #fef3c7; color: #92400e; }
+    .badge.poor { background: #fee2e2; color: #991b1b; }
+
+    /* Summary Section - Grid */
+    .summary-section {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      animation: fadeInUp 0.6s ease-out 1s both;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .summary-item {
+      text-align: center;
+      padding: 1.25rem 1rem;
+      background: var(--bg);
+      border-radius: 10px;
+      transition: transform var(--transition), background var(--transition);
+    }
+
+    .summary-item:hover {
+      transform: scale(1.05);
+      background: #e0e7ff;
+    }
+
+    .summary-item .value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: block;
+    }
+
+    .summary-item .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      text-align: center;
+      padding: 1.25rem;
+      font-size: 0.875rem;
+      margin-top: auto;
+    }
+
+    footer a {
+      color: #60a5fa;
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    footer a:hover {
+      color: #93c5fd;
+    }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      header {
+        padding: 0.875rem 1rem;
+      }
+
+      .logo {
+        font-size: 1.1rem;
+      }
+
+      .logo-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+      }
+
+      nav a {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.85rem;
+      }
+
+      main {
+        padding: 1rem;
+      }
+
+      .student-card {
+        padding: 1.25rem;
+        gap: 1rem;
+      }
+
+      .avatar {
+        width: 64px;
+        height: 64px;
+        font-size: 1.5rem;
+      }
+
+      .student-info h1 {
+        font-size: 1.25rem;
+      }
+
+      .stats {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .stat-item {
+        flex: 1;
+        min-width: 80px;
+        padding: 0.6rem 0.5rem;
+      }
+
+      .stat-value {
+        font-size: 1.25rem;
+      }
+
+      .marks-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats {
+        flex-direction: column;
+      }
+
+      .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        padding: 0.75rem 1rem;
+      }
+
+      .stat-value {
+        font-size: 1.35rem;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      header, footer, .filter-buttons {
+        display: none;
+      }
+      body {
+        background: white;
+      }
+      .subject-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with Flexbox -->
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <div class="logo-icon">📚</div>
+        <span>Student Portal</span>
+      </div>
+      <nav>
+        <a href="#" class="active">Internal Marks</a>
+        <a href="#">Attendance</a>
+        <a href="#">Timetable</a>
+        <a href="#">Profile</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Student Info Card - Flexbox -->
+    <section class="student-card">
+      <div class="avatar">AS</div>
+      <div class="student-info">
+        <h1>Akshayaa</h1>
+        <p>B.E (AIML) • Semester 5 • Roll No: AM106</p>
+      </div>
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-value">78%</div>
+          <div class="stat-label">Overall</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">6</div>
+          <div class="stat-label">Subjects</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">A</div>
+          <div class="stat-label">Grade</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section Header -->
+    <div class="section-header">
+      <h2>📊 Internal Assessment Marks</h2>
+      <div class="filter-buttons">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Theory</button>
+        <button class="filter-btn">Practical</button>
+      </div>
+    </div>
+
+    <!-- Marks Grid - CSS Grid Layout -->
+    <div class="marks-grid" id="marksGrid">
+      <!-- Subject Cards -->
+      <article class="subject-card">
+        <div class="subject-header">
+          <div>
+            <div class="subject-name">Data Structures & Algorithms</div>
+            <span class="subject-code">CS401</span>
+          </div>
+          <span class="badge excellent">Excellent</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Assignment (20)</span>
+          <span class="mark-value">18 / 20</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Quiz (10)</span>
+          <span class="mark-value">9 / 10</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Mid-Term (20)</span>
+          <span class="mark-value">17 / 20</span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill excellent" data-width="88"></div>
+          </div>
+        </div>
+        <div class="total-marks">
+          <span class="total-label">Total Internal</span>
+          <span class="total-value" style="color: var(--success);">44 / 50</span>
+        </div>
+      </article>
+
+      <article class="subject-card">
+        <div class="subject-header">
+          <div>
+            <div class="subject-name">Database Management Systems</div>
+            <span class="subject-code">CS402</span>
+          </div>
+          <span class="badge good">Good</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Assignment (20)</span>
+          <span class="mark-value">16 / 20</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Quiz (10)</span>
+          <span class="mark-value">8 / 10</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Mid-Term (20)</span>
+          <span class="mark-value">15 / 20</span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill good" data-width="78"></div>
+          </div>
+        </div>
+        <div class="total-marks">
+          <span class="total-label">Total Internal</span>
+          <span class="total-value" style="color: var(--primary);">39 / 50</span>
+        </div>
+      </article>
+
+      <article class="subject-card">
+        <div class="subject-header">
+          <div>
+            <div class="subject-name">Operating Systems</div>
+            <span class="subject-code">CS403</span>
+          </div>
+          <span class="badge good">Good</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Assignment (20)</span>
+          <span class="mark-value">15 / 20</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Quiz (10)</span>
+          <span class="mark-value">7 / 10</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Mid-Term (20)</span>
+          <span class="mark-value">16 / 20</span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill good" data-width="76"></div>
+          </div>
+        </div>
+        <div class="total-marks">
+          <span class="total-label">Total Internal</span>
+          <span class="total-value" style="color: var(--primary);">38 / 50</span>
+        </div>
+      </article>
+
+      <article class="subject-card">
+        <div class="subject-header">
+          <div>
+            <div class="subject-name">Computer Networks</div>
+            <span class="subject-code">CS404</span>
+          </div>
+          <span class="badge average">Average</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Assignment (20)</span>
+          <span class="mark-value">14 / 20</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Quiz (10)</span>
+          <span class="mark-value">6 / 10</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Mid-Term (20)</span>
+          <span class="mark-value">13 / 20</span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill average" data-width="66"></div>
+          </div>
+        </div>
+        <div class="total-marks">
+          <span class="total-label">Total Internal</span>
+          <span class="total-value" style="color: var(--warning);">33 / 50</span>
+        </div>
+      </article>
+
+      <article class="subject-card">
+        <div class="subject-header">
+          <div>
+            <div class="subject-name">Software Engineering</div>
+            <span class="subject-code">CS405</span>
+          </div>
+          <span class="badge excellent">Excellent</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Assignment (20)</span>
+          <span class="mark-value">19 / 20</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Quiz (10)</span>
+          <span class="mark-value">9 / 10</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Mid-Term (20)</span>
+          <span class="mark-value">18 / 20</span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill excellent" data-width="92"></div>
+          </div>
+        </div>
+        <div class="total-marks">
+          <span class="total-label">Total Internal</span>
+          <span class="total-value" style="color: var(--success);">46 / 50</span>
+        </div>
+      </article>
+
+      <article class="subject-card">
+        <div class="subject-header">
+          <div>
+            <div class="subject-name">Web Technologies Lab</div>
+            <span class="subject-code">CS406</span>
+          </div>
+          <span class="badge good">Good</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Lab Work (25)</span>
+          <span class="mark-value">21 / 25</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Viva (15)</span>
+          <span class="mark-value">12 / 15</span>
+        </div>
+        <div class="marks-row">
+          <span class="mark-label">Project (10)</span>
+          <span class="mark-value">8 / 10</span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill good" data-width="82"></div>
+          </div>
+        </div>
+        <div class="total-marks">
+          <span class="total-label">Total Internal</span>
+          <span class="total-value" style="color: var(--primary);">41 / 50</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- Summary Section - Grid -->
+    <section class="summary-section">
+      <h2>📈 Performance Summary</h2>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <span class="value">241</span>
+          <span class="label">Total Marks Obtained</span>
+        </div>
+        <div class="summary-item">
+          <span class="value">300</span>
+          <span class="label">Maximum Marks</span>
+        </div>
+        <div class="summary-item">
+          <span class="value">80.3%</span>
+          <span class="label">Average Percentage</span>
+        </div>
+        <div class="summary-item">
+          <span class="value">2</span>
+          <span class="label">Excellent Subjects</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Student Portal • Internal Marks System • Designed with CSS3 (Flexbox • Grid • Transitions • Animations)</p>
+  </footer>
+
+  <script>
+    // Animate progress bars on load
+    document.addEventListener('DOMContentLoaded', () => {
+      const fills = document.querySelectorAll('.progress-fill');
+      // Small delay so the entrance animation is visible first
+      setTimeout(() => {
+        fills.forEach(fill => {
+          const width = fill.getAttribute('data-width');
+          fill.style.width = width + '%';
+        });
+      }, 600);
+
+      // Filter button interaction (demo)
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
